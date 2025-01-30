@@ -63,7 +63,7 @@
                     "bundleName": "de.santos.rhemployees.i18n.i18n"
                 }
             },
-            "": {
+            "zEmployeesModel": {
                 "dataSource": "mainService",
                 "preload": true,
                 "settings": {}
@@ -90,17 +90,17 @@
             },
             "routes": [
                 {
-                    "name": "RouteView1",
+                    "name": "RouteHome",
                     "pattern": ":?query:",
                     "target": [
-                        "TargetView1"
+                        "TargetHome"
                     ]
                 }
             ],
             "targets": {
-                "TargetView1": {
-                    "id": "View1",
-                    "name": "View1"
+                "TargetHome": {
+                    "id": "Home",
+                    "name": "Home"
                 }
             }
         },

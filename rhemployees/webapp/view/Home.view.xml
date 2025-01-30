@@ -1,4 +1,4 @@
-<mvc:View controllerName="de.santos.rhemployees.controller.View1"
+<mvc:View controllerName="de.santos.rhemployees.controller.Home"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
     <Page id="page" title="{i18n>title}">
