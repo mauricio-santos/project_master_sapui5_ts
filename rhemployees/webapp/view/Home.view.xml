@@ -1,6 +1,38 @@
 <mvc:View controllerName="de.santos.rhemployees.controller.Home"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
-    <Page id="page" title="{i18n>title}">
+    <Page id="idPage" class="sapUiResponsiveMargin" title="{i18n>home}" titleAlignment="Center">
+
+        <Panel id="idHomeEmployeesPanel" expandable="true" headerText="{i18n>employees}" expanded="true">
+            <content>
+                <GenericTile id="idCreateEmployeeGenericTile" 
+                    class="sapUiTinyMarginBegin sapUiSmallMarginTop tileLayout" 
+                    headerImage="sap-icon://add-employee"
+                    press="onCreateEmployeeGenericTilePress"
+                >
+                    <TileContent id="idCreateEmployeeTileContent" footer="{i18n>createEmployee}"/>
+                </GenericTile>
+
+                <GenericTile id="idShowEmployeesGenericTile" 
+                    class="sapUiTinyMarginBegin sapUiSmallMarginTop tileLayout" 
+                    headerImage="sap-icon://employee-lookup"
+                    press="onShowEmployeesGenericTilePress"
+                >
+                    <TileContent id="idShowEmployeesTileContent" footer="{i18n>showEmployees}"/>
+                </GenericTile>
+            </content>
+        </Panel>
+
+        <Panel id="idSignOrderPanel" expandable="true" headerText="{i18n>orders}" expanded="true">
+            <content>
+                <GenericTile id="idSignOrderGenericTile" 
+                    class="sapUiTinyMarginBegin sapUiSmallMarginTop tileLayout" 
+                    headerImage="sap-icon://signature" 
+                    press="onSignOrderGenericTilePress"
+                >
+                    <TileContent id="idSignOrderTileContent" footer="{i18n>signOrder}"/>
+                </GenericTile>
+            </content>
+        </Panel>
     </Page>
 </mvc:View>
