@@ -1,0 +1,62 @@
+_schema-version: "3.2"
+ID: project_master_final
+version: 0.0.1
+modules:
+- name: project-master-final-approuter
+  type: approuter.nodejs
+  path: project-master-final-approuter
+  requires:
+  - name: project_master_final_html_repo_runtime
+  - name: uaa_project_master_final
+  - name: project_master_final-destination-service
+    group: destinations
+    properties:
+      forwardAuthToken: false
+      name: ui5
+      url: https://ui5.sap.com
+  parameters:
+    disk-quota: 256M
+    memory: 256M
+- name: project_master_final_ui_deployer
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: project_master_final_html_repo_host
+    parameters:
+      content-target: true
+resources:
+- name: project_master_final_html_repo_runtime
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-runtime
+- name: uaa_project_master_final
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: project_master_final-xsuaa-service
+    service-plan: application
+- name: project_master_final_html_repo_host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-host
+- name: project_master_final-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: false
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: project_master_final-destination-service
+    service-plan: lite
