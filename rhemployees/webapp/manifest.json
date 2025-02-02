@@ -95,12 +95,24 @@
                     "target": [
                         "TargetHome"
                     ]
+                },
+                {
+                    "name": "RouteCreateEmployees",
+                    "pattern": "create",
+                    "target": [
+                        "TargetCreateEmployees"
+                    ]
                 }
             ],
             "targets": {
                 "TargetHome": {
                     "id": "Home",
                     "name": "Home"
+                },
+                "TargetCreateEmployees": {
+                    "id": "CreateEmployees",
+                    "name": "CreateEmployees",
+                    "viewType": "XML"
                 }
             }
         },

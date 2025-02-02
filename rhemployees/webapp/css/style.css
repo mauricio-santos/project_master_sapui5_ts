@@ -1,1 +1,7 @@
 /* Enter your custom styles here */
+.customSlider .sapMSliderLabel {
+    white-space: nowrap;
+    overflow: visible;
+    width: 5rem;
+    left: -41px;
+}
