@@ -1,6 +1,7 @@
-<mvc:View controllerName="de.santos.rhemployees.controller.CreateEmployees"
+<mvc:View xmlns:tnt="sap.tnt" controllerName="de.santos.rhemployees.controller.CreateEmployees"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns="sap.m"
+    xmlns:upload="sap.m.upload"
 >
     <Page id="idCreateEmployeesPage" title="{i18n>createEmployees}" titleAlignment="Center">
         <Wizard id="idWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content"
@@ -56,8 +57,36 @@
 
             </WizardStep>
 
-            <WizardStep title="{i18n>employeeType}">
-                <MessageStrip class="sapUiSmallMarginBottom" text="{i18n>messageStripType}" showIcon="true" />
+            <WizardStep id="idWizardStep" title="{i18n>additionalInfo}" activate="searchFiles">
+                <MessageStrip id="idIfNecessaryAddComplementaryInformationToFinishPressTheReviewButtonMessageStrip"
+                    class="sapUiSmallMarginBottom" 
+                    text="{i18n>messageAddInfos}" 
+                    showIcon="true" 
+                />
+
+                <Label id="idCommentLabel" text="{i18n>comment}"/>
+                <TextArea id="idCommentTextArea" 
+                    width="100%" 
+                    maxLength="200" 
+                    value="{employee>/Comment}"
+                />
+
+                <upload:UploadSet id="idUploadSet"
+                    uploadUrl="/sap/opu/odata/sap/ZEMPLOYEES_SRV/Attachments"
+                    beforeUploadStarts="onUploadSetBeforeUploadStarts"
+                    uploadCompleted="onUploadSetUploadCompleted"
+                    afterItemRemoved="onUploadSetAfterItemRemoved"
+                    beforeItemAdded="onUploadSetBeforeItemAdded"
+                    mode="None"
+                >
+                    <upload:toolbar>
+                        <OverflowToolbar id="idUploadOverflowToolbar">
+                            <Label id="idAnnexLabel" text="{i18n>attachments} ({employeeModel>/Attachments})"/>
+                            <ToolbarSpacer id="idUploadToolbarSpacer"/>
+                        </OverflowToolbar>
+                    </upload:toolbar>
+
+                </upload:UploadSet>
             </WizardStep>
         </Wizard>
 
