@@ -1,100 +1,190 @@
-<mvc:View xmlns:tnt="sap.tnt" controllerName="de.santos.rhemployees.controller.CreateEmployees"
+<mvc:View controllerName="de.santos.rhemployees.controller.CreateEmployees"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns="sap.m"
     xmlns:upload="sap.m.upload"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
 >
-    <Page id="idCreateEmployeesPage" title="{i18n>createEmployees}" titleAlignment="Center">
-        <Wizard id="idWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content"
-            finishButtonText="{i18n>review}"
-        >
-            <WizardStep id="idTypeEmployeeWizardStep" title="{i18n>employeeType}" validated="false">
-                <MessageStrip id="idSelectTheEmployeeTypeToFillInTheDataMessageStrip" 
-                    class="sapUiSmallMarginBottom" 
-                    text="{i18n>messageStripType}" 
-                    showIcon="true"
-                />
+    <Page id="idCreateEmployeesPage" title="{i18n>createEmployee}" titleAlignment="Center">
+        <NavContainer id="idEmployeeNavContainer">
+            <pages>
 
-                <HBox id="idHBox" alignItems="Center" justifyContent="Center" wrap="Wrap">
-                    <Button id="idInternalButton" class="sapUiMediumMarginBegin" 
-                        width="100px"
-                        text="{i18n>internal}"
-                        press="onTypeEmployeeButtonPress"
-                    />
+                <Page id="idWizardPage" showHeader="false">
+                    <Wizard id="idWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content" finishButtonText="{i18n>review}" complete="onWizardComplete" navigationChange="onValidationEdit">
+                        <!-- Step 1 -->
+                        <WizardStep id="idTypeEmployeeWizardStep" title="{i18n>employeeType}" validated="false">
+                            <!-- MessageStrip Step 1 -->
+                            <MessageStrip id="idSelectTheEmployeeTypeToFillInTheDataMessageStrip" class="sapUiSmallMarginBottom" 
+                                text="{i18n>messageStripType}" 
+                                showIcon="true"
+                            />
+                            <!-- Employee Type Buttons -->
+                            <FlexBox id="idEmployeeTypeFlexBox" alignItems="Center" justifyContent="Center">
+                                <!-- Internal -->
+                                <Button id="idInternalButton" class="sapUiMediumMarginBegin" 
+                                    width="100px"
+                                    text="{i18n>internal}"
+                                    press="onTypeEmployeeButtonPress"
+                                />
+                                <!-- Autonomous -->
+                                <Button id="idAutonomousButton" class="sapUiMediumMarginBegin" 
+                                    width="100px"
+                                    text="{i18n>autonomous}"
+                                    press="onTypeEmployeeButtonPress"
+                                />
+                                <!-- Manager -->
+                                <Button id="idManagerButton" class="sapUiMediumMarginBegin" 
+                                    width="100px"
+                                    text="{i18n>manager}"
+                                    press="onTypeEmployeeButtonPress"
+                                />
+                            </FlexBox>
+                        </WizardStep>
+                            
+                        <!-- Step 2 -->
+                        <WizardStep id="idEmployeeDataWizardStep" 
+                            title="{i18n>employeeData}" 
+                            validated="{employeeModel>/isValidated}"
+                        >
+                            <!-- MessageStrip Step 2 -->
+                            <MessageStrip id="idCompleteTheRequiredDataToContinueMessageStrip" class="sapUiSmallMarginBottom" 
+                                text="{i18n>messageRequiredData}" 
+                                showIcon="true"
+                            />
+                            
+                            <form:SimpleForm id="idSimpleForm" layout="ResponsiveGridLayout" adjustLabelSpan="false" editable="true">
+                                <form:content>
+                                    <Label id="idFirstNameLabel" text="{i18n>firstName}"/>
+                                    <Input id="idFirstNameInput" 
+                                        value="{employeeModel>/FirstName}" 
+                                        required="true" 
+                                        change="onValidation"
+                                    />
 
-                    <Button id="idAutonomousButton" class="sapUiMediumMarginBegin" 
-                        width="100px"
-                        text="{i18n>autonomous}"
-                        press="onTypeEmployeeButtonPress"
-                    />
+                                    <Label id="idLastNameLabel" text="{i18n>lastName}"/>
+                                    <Input id="idLastNameInput" 
+                                        value="{employeeModel>/LastName}" 
+                                        required="true" 
+                                        change="onValidation"
+                                    />
 
-                    <Button id="idManagerButton" class="sapUiMediumMarginBegin" 
-                        width="100px"
-                        text="{i18n>manager}"
-                        press="onTypeEmployeeButtonPress"
-                    />
-                </HBox>
-            </WizardStep>
+                                    <Label id="idDNILabel" text="{i18n>dni}"/>
+                                    <Input id="idDniInput" 
+                                        value="{employeeModel>/DocumentNumber}" 
+                                        required="true" 
+                                        placeholder="{i18n>dniFormat}" 
+                                        change="onValidation" 
+                                        visible="{= ${employeeModel>/EmployeeType} === 'Internal' || ${employeeModel>/EmployeeType} === 'Manager'}"
+                                    />
 
-            <WizardStep id="idEmployeeDataWizardStep" 
-                title="{i18n>employeeData}" 
-                validated="{= 
-                        (${employeeModel>/FirstName} !== '' &amp;&amp; 
-                        ${employeeModel>/LastName} !== '' &amp;&amp; 
-                        ${employeeModel>/IncorporationDate} !== null) &amp;&amp;
-                        (${employeeModel>/DNIVerify} !== '' ||
-                        ${employeeModel>/CIFVerify} !== '')
-                    }"
-            >
-                <MessageStrip id="idCompleteTheRequiredDataToContinueMessageStrip"
-                    class="sapUiSmallMarginBottom" 
-                    text="{i18n>messageRequiredData}" 
-                    showIcon="true"
-                />
-                
-                <VBox id="idEmployeeVBox" class="sapUiSmallMargin">
-                    <Panel id="idEmployeePanel"/>
-                </VBox>
+                                    <Label id="idCifLabel" text="{i18n>cif}"/>
+                                    <Input id="idCifInput" 
+                                        value="{employeeModel>/DocumentNumber}" 
+                                        required="true"
+                                        placeholder="{i18n>cifFormat}" 
+                                        change="onValidation" 
+                                        visible="{= ${employeeModel>/EmployeeType} === 'Autonomous'}"
+                                    />
 
-            </WizardStep>
+                                    <Label id="idGrossAnnualSalaryInternalLabel" text="{i18n>annualSalary}"/>
+                                    <Slider id="idSalaryInternalSlider" class="sapUiMediumMarginBottom customSlider" 
+                                        enableTickmarks="true" 
+                                        min="12000" 
+                                        max="80000" 
+                                        step="500" 
+                                        showAdvancedTooltip="true" 
+                                        value="{employeeModel>/Salary}"
+                                        visible="{= ${employeeModel>/EmployeeType} === 'Internal'}"
+                                    />
 
-            <WizardStep id="idWizardStep" title="{i18n>additionalInfo}" activate="searchFiles">
-                <MessageStrip id="idIfNecessaryAddComplementaryInformationToFinishPressTheReviewButtonMessageStrip"
-                    class="sapUiSmallMarginBottom" 
-                    text="{i18n>messageAddInfos}" 
-                    showIcon="true" 
-                />
+                                    <Label id="idDailyPriceAutonomousLabel" text="{i18n>dailyPrice}"/>
+                                    <Slider id="idDailyPriceSlider" class="sapUiMediumMarginBottom customSlider" 
+                                        enableTickmarks="true" 
+                                        min="100" 
+                                        max="2000" 
+                                        step="100" 
+                                        showAdvancedTooltip="true" 
+                                        value="{employeeModel>/Salary}" 
+                                        visible="{= ${employeeModel>/EmployeeType} === 'Autonomous'}"
+                                    />
 
-                <Label id="idCommentLabel" text="{i18n>comment}"/>
-                <TextArea id="idCommentTextArea" 
-                    width="100%" 
-                    maxLength="200" 
-                    value="{employee>/Comment}"
-                />
+                                    <Label id="idGrossAnnualSalaryManagerLabel" text="{i18n>annualSalary}"/>
+                                    <Slider id="idSalaryManagerSlider" class="sapUiMediumMarginBottom customSlider" 
+                                        enableTickmarks="true" 
+                                        min="50000" 
+                                        max="200000" 
+                                        step="10000" 
+                                        showAdvancedTooltip="true" 
+                                        value="{employeeModel>/Salary}"
+                                        visible="{= ${employeeModel>/EmployeeType} === 'Manager'}"
+                                    />
 
-                <upload:UploadSet id="idUploadSet"
-                    uploadUrl="/sap/opu/odata/sap/ZEMPLOYEES_SRV/Attachments"
-                    beforeUploadStarts="onUploadSetBeforeUploadStarts"
-                    uploadCompleted="onUploadSetUploadCompleted"
-                    afterItemRemoved="onUploadSetAfterItemRemoved"
-                    beforeItemAdded="onUploadSetBeforeItemAdded"
-                    mode="None"
-                >
-                    <upload:toolbar>
-                        <OverflowToolbar id="idUploadOverflowToolbar">
-                            <Label id="idAnnexLabel" text="{i18n>attachments} ({employeeModel>/Attachments})"/>
-                            <ToolbarSpacer id="idUploadToolbarSpacer"/>
+                                    <Label id="idIncorporationDateLabel" text="{i18n>incorporationDate}"/>
+                                    <DatePicker id="idDatePicker" 
+                                        dateValue="{employeeModel>/IncorporationDate}" 
+                                        required="true" 
+                                        change="onValidation"
+                                    />
+                                </form:content>
+                            </form:SimpleForm>
+
+                        </WizardStep>
+
+                        <!-- Step 3 -->
+                        <WizardStep id="idAdditionalInfoWizardStep" title="{i18n>additionalInfo}" activate="searchFiles">
+                            <MessageStrip id="idIfNecessaryAddComplementaryInformationToFinishPressTheReviewButtonMessageStrip" class="sapUiSmallMarginBottom" 
+                                text="{i18n>messageAddInfos}" 
+                                showIcon="true" 
+                            />
+
+                            <Label id="idCommentLabel" text="{i18n>comment}"/>
+                            <TextArea id="idCommentsTextArea"
+                                width="100%" 
+                                maxLength="200" 
+                                value="{employeeModel>/Comments}"
+                            />
+
+                            <upload:UploadSet id="idUploadSet"
+                                uploadUrl="/sap/opu/odata/sap/ZEMPLOYEES_SRV/Attachments"
+                                beforeUploadStarts="onUploadSetBeforeUploadStarts"
+                                uploadCompleted="onUploadSetUploadCompleted"
+                                afterItemRemoved="onUploadSetAfterItemRemoved"
+                                beforeItemAdded="onUploadSetBeforeItemAdded"
+                                mode="None"
+                            >
+                                <upload:toolbar>
+                                    <OverflowToolbar id="idUploadOverflowToolbar">
+                                        <Label id="idAnnexLabel" text="{i18n>attachments} ({employeeModel>/totalFiles})"/>
+                                        <ToolbarSpacer id="idUploadToolbarSpacer"/>
+                                    </OverflowToolbar>
+                                </upload:toolbar>
+                            </upload:UploadSet>
+                        </WizardStep>
+                    </Wizard>
+
+                    <footer>
+                        <OverflowToolbar id="idCreateOverflowToolbar">
+                            <ToolbarSpacer id="idCreateToolbarSpacer"/>
+                            <Button id="idCancelCreateButton" text="{i18n>cancel}" type="Reject" press="onCancelButtonPress"/>
                         </OverflowToolbar>
-                    </upload:toolbar>
+                    </footer>
+                </Page>
 
-                </upload:UploadSet>
-            </WizardStep>
-        </Wizard>
+                <Page id="idReviewPage" title="{i18n>review}" titleAlignment="Center">
 
-        <footer>
-            <OverflowToolbar id="idOverflowToolbar">
-                <ToolbarSpacer id="idToolbarSpacer"/>
-                <Button id="idCancelButton" text="{i18n>cancel}" type="Reject" press="onCancelButtonPress"/>
-            </OverflowToolbar>
-        </footer>
+                    <core:Fragment fragmentName="de.santos.rhemployees.fragments.ReviewEmployee" type="XML"/>
+
+                    <footer>
+                        <OverflowToolbar id="idOverflowToolbar">
+                            <ToolbarSpacer id="idToolbarSpacer"/>
+                            <Button id="idSaveEmployeeButton" text="{i18n>save}" type="Success" press="onSaveEmployeeButtonPress"/>
+
+                            <Button id="idCancelReviewButton" text="{i18n>cancel}" type="Reject" press="onCancelButtonPress"/>
+                        </OverflowToolbar>
+                    </footer>
+                </Page>
+
+            </pages>
+        </NavContainer>
     </Page>
 </mvc:View>

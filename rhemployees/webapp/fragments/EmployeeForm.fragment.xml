@@ -3,43 +3,38 @@
 	xmlns:c="sap.ui.core"
 	xmlns:form="sap.ui.layout.form"
 >
-	<form:SimpleForm id="idInternalSimpleForm" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false">
+	<form:SimpleForm id="idSimpleForm" layout="ResponsiveGridLayout" adjustLabelSpan="false" editable="true">
 		<form:content>
-			<Label id="idFirstNameInternalLabel" text="{i18n>firstName}"/>
-			<Input id="idFirstNameInternalInput" 
+			<Label id="idFirstNameLabel" text="{i18n>firstName}"/>
+			<Input id="idFirstNameInput" 
 				value="{employeeModel>/FirstName}" 
 				required="true" 
 				liveChange="onValidation"
-				valueState="{employeeModel>/FirstNameValueState}"
 			/>
 
-			<Label id="idLastNameInternalLabel" text="{i18n>lastName}"/>
-			<Input id="idLastNameInternalInput" 
+			<Label id="idLastNameLabel" text="{i18n>lastName}"/>
+			<Input id="idLastNameInput" 
 				value="{employeeModel>/LastName}" 
 				required="true" 
 				liveChange="onValidation"
-				valueState="{employeeModel>/LastNameValueState}"
 			/>
 
-			<Label id="idDNIInternalLabel" text="{i18n>dni}"
-			/>
-			<Input id="idDniInternalInput" 
-				value="{employeeModel>/DNI}" 
+			<Label id="idDNILabel" text="{i18n>dni}"/>
+			<Input id="idDniInput" 
+				value="{employeeModel>/DocumentNumber}" 
 				required="true" 
 				placeholder="{i18n>dniFormat}" 
 				change="onValidation" 
 				visible="{= ${employeeModel>/EmployeeType} === 'Internal' || ${employeeModel>/EmployeeType} === 'Manager'}"
-				valueState="{employeeModel>/DNIValueState}"
 			/>
 
 			<Label id="idCifLabel" text="{i18n>cif}"/>
 			<Input id="idCifInput" 
-				value="{employeeModel>/CIF}" 
+				value="{employeeModel>/DocumentNumber}" 
 				required="true"
 				placeholder="{i18n>cifFormat}" 
 				change="onValidation" 
 				visible="{= ${employeeModel>/EmployeeType} === 'Autonomous'}"
-				valueState="{employeeModel>/CIFValueState}"
 			/>
 
 			<Label id="idGrossAnnualSalaryInternalLabel" text="{i18n>annualSalary}"/>
@@ -49,18 +44,18 @@
 				max="80000" 
 				step="500" 
 				showAdvancedTooltip="true" 
-				value="{employeeModel>/SalaryInternal}"
+				value="{employeeModel>/Salary}"
 				visible="{= ${employeeModel>/EmployeeType} === 'Internal'}"
 			/>
 
-			<Label id="idDailyPriceLabel" text="{i18n>dailyPrice}"/>
+			<Label id="idDailyPriceAutonomousLabel" text="{i18n>dailyPrice}"/>
             <Slider id="idDailyPriceSlider" class="sapUiMediumMarginBottom customSlider" 
                 enableTickmarks="true" 
                 min="100" 
                 max="2000" 
                 step="100" 
                 showAdvancedTooltip="true" 
-                value="{employeeModel>/DailyPrice}" 
+                value="{employeeModel>/Salary}" 
 				visible="{= ${employeeModel>/EmployeeType} === 'Autonomous'}"
             />
 
@@ -71,16 +66,15 @@
 				max="200000" 
 				step="10000" 
 				showAdvancedTooltip="true" 
-				value="{employeeModel>/SalaryManager}"
+				value="{employeeModel>/Salary}"
 				visible="{= ${employeeModel>/EmployeeType} === 'Manager'}"
 			/>
 
-			<Label id="idIncorporationDateInternalLabel" text="{i18n>incorporationDate}"/>
-			<DatePicker id="idInternalDatePicker" 
+			<Label id="idIncorporationDateLabel" text="{i18n>incorporationDate}"/>
+			<DatePicker id="idDatePicker" 
 				dateValue="{employeeModel>/IncorporationDate}" 
 				required="true" 
 				change="onValidation"
-				valueState="{employeeModel>/IncorporationDateValueState}"
 			/>
 		</form:content>
 	</form:SimpleForm>

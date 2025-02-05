@@ -109,6 +109,20 @@
                     "target": [
                         "TargetCreateEmployees"
                     ]
+                },
+                {
+                    "name": "RouteReviewEmployee",
+                    "pattern": "review",
+                    "target": [
+                        "TargetCreateEmployees"
+                    ]
+                },
+                {
+                    "name": "RouteEditEmployee",
+                    "pattern": "edit/{step}",
+                    "target": [
+                        "TargetCreateEmployees"
+                    ]
                 }
             ],
             "targets": {

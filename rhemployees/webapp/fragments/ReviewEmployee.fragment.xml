@@ -1,0 +1,63 @@
+<c:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:c="sap.ui.core"
+    xmlns:form="sap.ui.layout.form"
+>
+    <form:SimpleForm id="idEmployeeTypeSimpleForm" title="1. {i18n>employeeType}" layout="ResponsiveGridLayout" adjustLabelSpan="false">
+        <form:content>
+            <Label id="idEmployeeTypeLabel" class="bold" text="{i18n>employeeType}"/>
+            <Text id="idEmployeeTypeText" text="{employeeModel>/EmployeeType}"/>
+            <Link id="idEditStepOneLink" text="{i18n>edit}" press="onEditLinkStep1Press"/>
+        </form:content>
+    </form:SimpleForm>
+
+    <form:SimpleForm id="idEmployeeDataSimpleForm" title="2. {i18n>employeeData}" layout="ResponsiveGridLayout" adjustLabelSpan="false">
+        <form:content>
+            <Label id="idFirstNameReviewLabel" class="bold" text="{i18n>firstName}"/>
+            <Text id="idFirstNameText" text="{employeeModel>/FirstName}"/>
+
+            <Label id="idLastNameReviewLabel" class="bold" text="{i18n>lastName}"/>
+            <Text id="idLastNameText" text="{employeeModel>/LastName}"/>
+
+            <Label id="idDNIReviewLabel" class="bold" text="{i18n>dni}"/>
+            <Text id="idDocumentNumberDniText" text="{employeeModel>/DocumentNumber}" visible="{= ${employeeModel>/EmployeeType} !== 'Autonomous'}" />
+
+            <Label id="idCIFReviewLabel" class="bold" text="{i18n>cif}"/>
+            <Text id="idDocumentNumberCifText" text="{employeeModel>/DocumentNumber}" visible="{= ${employeeModel>/EmployeeType} === 'Autonomous'}" />
+
+            <Label id="idGrossAnnualSalaryInternalReviewLabel" class="bold" text="{i18n>annualSalary}"/>
+            <Text id="idSalaryInternalText" text="{employeeModel>/Salary}" visible="{= ${employeeModel>/EmployeeType} === 'Internal'}" />
+
+            <Label id="idDailyPriceReviewLabel" class="bold" text="{i18n>dailyPrice}"/>
+            <Text id="idSalaryAutonomousText" text="{employeeModel>/Salary}" visible="{= ${employeeModel>/EmployeeType} === 'Autonomous'}" />
+
+            <Label id="idGrossAnnualSalaryReviewManagerLabel" class="bold" text="{i18n>annualSalary}"/>
+            <Text id="idSalaryManagerText" text="{employeeModel>/Salary}" visible="{= ${employeeModel>/EmployeeType} === 'Manager'}" />
+
+            <Label id="idIncorporationDateReviewLabel" class="bold" text="{i18n>incorporationDate}"/>
+            <Text id="idIncorporationDateText" text="{ path: 'employeeModel>/IncorporationDate',
+                            type: 'sap.ui.model.type.Date',
+                            formatOptions: {pattern: 'dd/MM/yyyy'}
+                        }" />
+            <Link id="idEditStepTwoLink" text="{i18n>edit}" press="onEditLinkStep2Press"/>
+        </form:content>
+    </form:SimpleForm>
+
+    <form:SimpleForm id="idAdditionalInfoSimpleForm" title="1. {i18n>additionalInfo}" layout="ResponsiveGridLayout" adjustLabelSpan="false">
+        <form:content>
+            <Label id="idCommentReviewLabel" class="bold" text="{i18n>comment}"/>
+            <Text id="idCommentText" text="{employeeModel>/Comments}"/>
+
+            <Label id="idAttachmentsReviewLabel" class="bold" text="{i18n>attachments}"/>
+            <Text id="idTotalFilesText" text="{employeeModel>/totalFiles} {i18n>files}"/>
+
+            <Label id="idLabel"/>
+            <List id="idFileListList" items="{employeeModel>/uploadedList}">
+                <items>
+                    <ObjectListItem id="idObjectListItem" title="{employeeModel>DocName}"/>
+                </items>
+            </List>
+            <Link id="idEditStepThreeLink" text="{i18n>edit}" press="onEditLinkStep3Press"/>
+        </form:content>
+    </form:SimpleForm>
+</c:FragmentDefinition>

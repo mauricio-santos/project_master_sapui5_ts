@@ -5,3 +5,7 @@
     width: 5rem;
     left: -41px;
 }
+
+.bold {
+    font-weight: bold;
+}
