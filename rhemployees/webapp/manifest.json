@@ -123,6 +123,13 @@
                     "target": [
                         "TargetCreateEmployees"
                     ]
+                },
+                {
+                    "name": "RouteMasterDetailsEmployee",
+                    "pattern": "details",
+                    "target": [
+                        "TargetMasterDetailsEmployees"
+                    ]
                 }
             ],
             "targets": {
@@ -133,6 +140,11 @@
                 "TargetCreateEmployees": {
                     "id": "CreateEmployees",
                     "name": "CreateEmployees",
+                    "viewType": "XML"
+                },
+                "TargetMasterDetailsEmployees": {
+                    "id": "MasterDetails",
+                    "name": "MasterDetails",
                     "viewType": "XML"
                 }
             }

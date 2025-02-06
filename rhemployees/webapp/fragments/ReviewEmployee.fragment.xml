@@ -45,14 +45,14 @@
 
     <form:SimpleForm id="idAdditionalInfoSimpleForm" title="3. {i18n>additionalInfo}" layout="ResponsiveGridLayout" adjustLabelSpan="false">
         <form:content>
-            <Label id="idCommentReviewLabel" class="bold" text="{i18n>comment}"/>
-            <Text id="idCommentText" text="{employeeModel>/Comments}"/>
+            <Label id="idCommentsReviewLabel" class="bold" text="{i18n>comments}"/>
+            <Text id="idCommentsText" text="{employeeModel>/Comments}"/>
 
             <Label id="idAttachmentsReviewLabel" class="bold" text="{i18n>attachments}"/>
             <Text id="idTotalFilesText" text="{employeeModel>/totalFiles} {i18n>files}"/>
 
             <Label id="idLabel"/>
-            <List id="idFileListList" items="{employeeModel>/uploadedList}">
+            <List id="idPendingUploadsList" items="{employeeModel>/pendingUploads}">
                 <items>
                     <ObjectListItem id="idObjectListItem" title="{employeeModel>DocName}"/>
                 </items>

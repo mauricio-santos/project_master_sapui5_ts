@@ -1,0 +1,32 @@
+<mvc:View controllerName="de.santos.rhemployees.controller.MasterDetails"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"
+    xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+>
+    <SplitContainer id="idSplitContainer">
+        <masterPages>
+            <Page id="idMasterPage" title="{i18n>employees}" backgroundDesign= "List" showNavButton="true" navButtonPress="onPageMasterNavButtonPress">
+                <OverflowToolbar id="idDetailsOverflowToolbar">
+                    <SearchField id="idSearchField" liveChange="onSearchFieldLiveChange"/>
+                </OverflowToolbar>
+
+                <List id="idUsersList" items="{zEmployeesModel>/Users}">
+                    <ObjectListItem id="idEmployeesObjectListItem" 
+                        title="{zEmployeesModel>FirstName} {zEmployeesModel>LastName}" 
+                        type="Navigation" 
+                        press="onObjectListItemPress"
+                    >
+                        <ObjectAttribute id="idDniObjectAttribute" text="{zEmployeesModel>Dni}"/>
+                    </ObjectListItem>
+                </List>
+            </Page>
+        </masterPages>
+        
+        <detailPages>
+            <Page id="detail" title="Detail 1" backgroundDesign= "Solid" showNavButton="{= !${device>/system/desktop} }" navButtonPress=".onPressDetailBack">
+                <Label text="Detail page 1" class="sapUiTinyMarginEnd" />
+                <Button text="Go to Detail page 2" press=".onPressNavToDetail" />
+            </Page>
+        </detailPages>
+    </SplitContainer>
+</mvc:View>

@@ -70,21 +70,20 @@ export default class Utils {
         const url = model.getProperty("/url");
         const data = model.getProperty("/data");
         const i18n = this.resourceBundle;
-        const _this = this;
 
         return new Promise((resolve, reject) => {
             this.model.create(url, data, {
-                success: async function() {
-                    MessageBox.success(i18n.getText("success") || "no text defined");
+                success: async function(result: any) {
+                    // MessageBox.success(i18n.getText("success") || "no text defined");
                     // resolve(await _this.read(model));    
                     console.log("------- CREATED --------");
-                               
-                    resolve();               
+                    resolve(result);               
                 },
                 error: function(e: any) {
                     MessageBox.error(i18n.getText("error") || "no text defined");
                     console.log("------- NOT CREATED --------");
                     resolve(e);
+                    
                 }
             });
         });
