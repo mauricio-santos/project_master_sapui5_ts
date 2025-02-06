@@ -43,7 +43,7 @@
         </form:content>
     </form:SimpleForm>
 
-    <form:SimpleForm id="idAdditionalInfoSimpleForm" title="1. {i18n>additionalInfo}" layout="ResponsiveGridLayout" adjustLabelSpan="false">
+    <form:SimpleForm id="idAdditionalInfoSimpleForm" title="3. {i18n>additionalInfo}" layout="ResponsiveGridLayout" adjustLabelSpan="false">
         <form:content>
             <Label id="idCommentReviewLabel" class="bold" text="{i18n>comment}"/>
             <Text id="idCommentText" text="{employeeModel>/Comments}"/>

@@ -61,7 +61,7 @@ export default class Utils {
                 case 'create': resolve(await _this.create(model)); break;
                 // case 'update': resolve(await _this.update(model)); break;
                 case 'delete': resolve(await _this.delete(model)); break;
-                // default: reject(new Error("Invalid action"));
+                default: reject(new Error("Invalid action"));
             }
         });
     };
@@ -76,12 +76,15 @@ export default class Utils {
             this.model.create(url, data, {
                 success: async function() {
                     MessageBox.success(i18n.getText("success") || "no text defined");
-                    // resolve(await _this.read(model));               
+                    // resolve(await _this.read(model));    
+                    console.log("------- CREATED --------");
+                               
                     resolve();               
                 },
                 error: function(e: any) {
                     MessageBox.error(i18n.getText("error") || "no text defined");
-                    reject(e);
+                    console.log("------- NOT CREATED --------");
+                    resolve(e);
                 }
             });
         });

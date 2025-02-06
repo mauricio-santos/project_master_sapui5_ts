@@ -1,7 +1,6 @@
 import BaseControllers from "../helpers/BaseControllers";
 import { Button$PressEvent } from "sap/m/Button";
 import Input, { Input$LiveChangeEvent } from "sap/m/Input";
-import Panel from "sap/m/Panel";
 import Wizard from "sap/m/Wizard";
 import WizardStep from "sap/m/WizardStep";
 import JSONModel from "sap/ui/model/json/JSONModel";
@@ -26,15 +25,16 @@ import ODataListBinding from "sap/ui/model/odata/ODataListBinding";
  */
 
 export default class CreateEmployees extends BaseControllers {
-    private initialData = {
+    private initialData = Object.freeze({
         EmployeeId: "0021",
         FirstName: "",
         LastName: "",
         DocumentNumber: "",
         Salary: 0,
         IncorporationDate: null,
-        isValidated: false
-    }
+        isValidated: false,
+        totalFiles: 0
+    });
 
     private objectMatched(event: Route$MatchedEvent): void {
         const employeeModel = this.getModelHelper("employeeModel") as JSONModel;
@@ -43,8 +43,23 @@ export default class CreateEmployees extends BaseControllers {
         !employeeType && this.getRouterHelper().navTo("RouteCreateEmployees");
     };
 
+    private resetWizard(): void {
+        const wizard = this.byId("idWizard") as Wizard;
+        const wizardStep1 = this.byId("idTypeEmployeeWizardStep") as WizardStep;
+        const inputDni = this.byId('idDniInput') as Input
+        const inputCif = this.byId('idCifInput') as Input
+        const navContainer = this.byId("idEmployeeNavContainer") as NavContainer;
+        const wizardPage = this.byId("idWizardPage") as Page
+
+        navContainer.to(wizardPage);
+        wizard.setCurrentStep(wizardStep1);
+        wizardStep1.setValidated(false);
+        inputDni.setValueState("None");
+        inputCif.setValueState("None");
+}
+
     public onInit(): void {
-        const model = new JSONModel(this.initialData) as JSONModel;
+        const model = new JSONModel({...this.initialData}) as JSONModel;
         this.setModelHelper(model, "employeeModel");
 
         const router = this.getRouterHelper();
@@ -151,31 +166,39 @@ export default class CreateEmployees extends BaseControllers {
 
     // ############## FORM VALIDATIONS EDIT ##############
     public onValidationEdit(): void {
-        const employeeModel = this.getView()?.getModel("employeeModel") as JSONModel;
-        const employeeType = employeeModel.getProperty("/EmployeeType");
-        const documentNumber = employeeModel.getProperty("/DocumentNumber");
-        const i18n = this.getResourceBundleHelper();
-        const wizard = this.byId("idWizard") as Wizard;
-        const wizardStep2 = this.byId("idEmployeeDataWizardStep") as WizardStep;
+        const routerHash = (this.getRouterHelper().getHashChanger() as any).hash   
 
-        const inputDni = this.byId('idDniInput') as Input
-        const inputCif = this.byId('idCifInput') as Input
-        const dniExist = Validate.dniCheck.bind(this)(documentNumber);
-        const cifExist = Validate.cifCheck.bind(this)(documentNumber);
+        if (routerHash === 'edit/2'){
+            const employeeModel = this.getView()?.getModel("employeeModel") as JSONModel;
+            const employeeType = employeeModel.getProperty("/EmployeeType");
+            const documentNumber = employeeModel.getProperty("/DocumentNumber");
+            const i18n = this.getResourceBundleHelper();
+            const wizard = this.byId("idWizard") as Wizard;
+            const wizardStep2 = this.byId("idEmployeeDataWizardStep") as WizardStep;
+            const wizardStep3 = this.byId("idAdditionalInfoWizardStep") as WizardStep;
 
-        if (employeeType !== 'Autonomous' && dniExist) {           
-            inputDni.setValueState("Success");
-            employeeModel.setProperty("/docummentIsValid", true);
-        }else if (employeeType === 'Autonomous' && cifExist) {
-            inputCif.setValueState("Success");
-            employeeModel.setProperty("/docummentIsValid", true);
-        }else {
-            inputDni.setValueState("Warning"); 
-            inputDni.setValueStateText(i18n.getText("msgDniError") || "no text defined"); 
-            inputCif.setValueState("Warning"); 
-            inputCif.setValueStateText(i18n.getText("msgDniError") || "no text defined"); 
-            employeeModel.setProperty("/docummentIsValid", false);
-            wizard.goToStep(wizardStep2, false);
+            const inputDni = this.byId('idDniInput') as Input
+            const inputCif = this.byId('idCifInput') as Input
+            const dniExist = Validate.dniCheck.bind(this)(documentNumber);
+            const cifExist = Validate.cifCheck.bind(this)(documentNumber);
+
+            if (employeeType !== 'Autonomous' && dniExist) {           
+                inputDni.setValueState("Success");
+                employeeModel.setProperty("/docummentIsValid", true);
+                wizardStep3.setValidated(true)
+            }else if (employeeType === 'Autonomous' && cifExist) {
+                inputCif.setValueState("Success");
+                employeeModel.setProperty("/docummentIsValid", true);
+                wizardStep3.setValidated(true)
+            }else {
+                inputDni.setValueState("Warning"); 
+                inputDni.setValueStateText(i18n.getText("msgDniError") || "no text defined"); 
+                inputCif.setValueState("Warning"); 
+                inputCif.setValueStateText(i18n.getText("msgDniError") || "no text defined"); 
+                employeeModel.setProperty("/docummentIsValid", false);
+                wizard.goToStep(wizardStep2, false);
+                wizardStep3.setValidated(false)
+            }
         }
     }
 
@@ -221,6 +244,8 @@ export default class CreateEmployees extends BaseControllers {
         const uploadSet = this.byId("idUploadSet") as UploadSet;
         const utils = new Utils(this);
 
+        uploadSet.setBusy(true);
+
         const data = {
             url: "/Attachments",
             filters: [
@@ -230,7 +255,7 @@ export default class CreateEmployees extends BaseControllers {
         };
         const result = await utils.read(new JSONModel(data)) as any; 
 
-        const uploadedFiles = result.results as Array<Object>;  
+        const uploadedFiles = result?.results as Array<Object>;  
         const filesCount = result ? uploadedFiles.length : 0;
         employeeModel.setProperty("/totalFiles", filesCount);
         
@@ -254,6 +279,7 @@ export default class CreateEmployees extends BaseControllers {
         };
         uploadSet.bindAggregation("items",bindingInfo);
         uploadSet.getBinding("items")?.refresh(true)
+        uploadSet.setBusy(false);
     };
 
     public async onUploadSetAfterItemRemoved(event: UploadSet$AfterItemRemovedEvent): Promise<void> {
@@ -275,10 +301,9 @@ export default class CreateEmployees extends BaseControllers {
         };
         const result = await utils.crud("delete", new JSONModel(data)) as any;
 
-        const uploadedFiles = result.results as Array<Object>;  
+        const uploadedFiles = result?.results as Array<Object>;  
         const filesCount = result ? uploadedFiles.length : 0;
         employeeModel.setProperty("/totalFiles", filesCount);
-
         uploadSet.getBinding("items")?.refresh();
     };
 
@@ -309,18 +334,20 @@ export default class CreateEmployees extends BaseControllers {
     };
 
     public onCancelButtonPress(): void {
-        const i18n = this.getResourceBundleHelper()
-        const $this = this
+        const i18n = this.getResourceBundleHelper();
+        const employeeModel = this.getModelHelper("employeeModel") as JSONModel;
+
         MessageBox.confirm(i18n.getText("msgFormCancel") || "no text defined", {
             actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
             emphasizedAction: MessageBox.Action.OK,
             onClose: () => {
-                const wizard = $this.byId("idWizard") as Wizard;
-                const wizardStep1 = $this.byId("idTypeEmployeeWizardStep") as WizardStep;
-                wizard.setCurrentStep(wizardStep1);
-                wizardStep1.setValidated(false);
-                // $this.loadInitialData();
-                $this.getRouterHelper().navTo("RouteHome");
+                this.getRouterHelper().navTo("RouteHome");
+
+                setTimeout(() => {
+                    employeeModel.setData({...this.initialData});
+                    employeeModel.refresh();
+                    this.resetWizard();
+                }, 1000);
             }
         });
     };
@@ -366,6 +393,8 @@ export default class CreateEmployees extends BaseControllers {
     public async onSaveEmployeeButtonPress(): Promise<void | ODataListBinding> {
         const employeeModel = this.getModelHelper("employeeModel");
         const utils = new Utils(this);
+        const pageReview = this.byId("idReviewPage") as Page;
+        pageReview.setBusy(true);
 
         const object = {
             data: {
@@ -383,5 +412,6 @@ export default class CreateEmployees extends BaseControllers {
 
         const model = new JSONModel(object);
         await utils.crud("create", model);
+        pageReview.setBusy(false);
     }
 };
