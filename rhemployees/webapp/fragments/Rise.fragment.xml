@@ -1,0 +1,55 @@
+<c:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:c="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+>
+    <Dialog id="idRiseDialog" title="{i18n>newRise}">
+
+            <f:Form id="idNewAscentDialogForm">
+                <f:layout>
+                    <f:ResponsiveGridLayout id="idResponsiveGridLayout"
+                        labelSpanXL="3" 
+                        labelSpanL="3" 
+                        labelSpanM="3" 
+                        labelSpanS="12"
+                        adjustLabelSpan="false" 
+                        emptySpanXL="4" 
+                        emptySpanL="4" 
+                        emptySpanM="4" 
+                        emptySpanS="0" 
+                        columnsXL="1" 
+                        columnsL="1" 
+                        columnsM="1" 
+                        singleContainerFullSize="false"
+                    />
+                </f:layout>
+
+                <f:formContainers>
+                    <f:FormContainer id="idFormContainer">
+                        <f:formElements>
+                            <f:FormElement id="idFormElement" label="{i18n>salary}">
+                                <f:fields>
+                                    <Input id="idAmountInput" value="{employeeModel>/Amount}"/>
+                                </f:fields>
+                            </f:FormElement>
+                            <f:FormElement id="idDateFormElement" label="{i18n>date}">
+                                <f:fields>
+                                    <DatePicker id="idRiseDatePicker" dateValue="{employeeModel>/CreationDate}"/>
+                                </f:fields>
+                            </f:FormElement>
+                            <f:FormElement id="idCommentsFormElement" label="{i18n>comments}">
+                                <f:fields>
+                                    <TextArea id="idCommentsRiseTextArea" value="{employeeModel>/Comments}"/>
+                                </f:fields>
+                            </f:FormElement>
+                        </f:formElements>
+                    </f:FormContainer>
+                </f:formContainers>
+            </f:Form>
+
+        <buttons>
+            <Button id="idAddRiseButton" text="{i18n>add}" type="Success" press="onAddButtonPress"/>
+            <Button id="idCancelRiseButton" text="{i18n>cancel}" type="Reject" press="onCancelButtonPress"/>
+        </buttons>
+    </Dialog>
+</c:FragmentDefinition>

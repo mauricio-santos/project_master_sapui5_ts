@@ -1,19 +1,26 @@
 <mvc:View controllerName="de.santos.rhemployees.controller.MasterDetails"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns="sap.m"
-    xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+    xmlns:upload="sap.m.upload"
+    xmlns:commons="sap.suite.ui.commons"
 >
-    <SplitContainer id="idSplitContainer">
+    <SplitApp id="idSplitApp">
+        <!-- MASTER VIEW -->
         <masterPages>
-            <Page id="idMasterPage" title="{i18n>employees}" backgroundDesign= "List" showNavButton="true" navButtonPress="onPageMasterNavButtonPress">
-                <OverflowToolbar id="idDetailsOverflowToolbar">
+            <Page id="idMasterPage" title="{i18n>employees}" showHeader="false">
+                <Toolbar id="idDetailsOverflowToolbar">
+                <Button id="idNavBarButton" icon="sap-icon://nav-back" press="onNavBackButtonPress"/>
                     <SearchField id="idSearchField" liveChange="onSearchFieldLiveChange"/>
-                </OverflowToolbar>
+                </Toolbar>
 
-                <List id="idUsersList" items="{zEmployeesModel>/Users}">
+                <List id="idUsersList" 
+                    items="{zEmployeesModel>/Users}"
+                    growing="true" 
+                    growingScrollToLoad="true"
+                >
                     <ObjectListItem id="idEmployeesObjectListItem" 
                         title="{zEmployeesModel>FirstName} {zEmployeesModel>LastName}" 
-                        type="Navigation" 
+                        type="Navigation"
                         press="onObjectListItemPress"
                     >
                         <ObjectAttribute id="idDniObjectAttribute" text="{zEmployeesModel>Dni}"/>
@@ -22,11 +29,113 @@
             </Page>
         </masterPages>
         
+        <!-- DETAIL VIEW -->
         <detailPages>
-            <Page id="detail" title="Detail 1" backgroundDesign= "Solid" showNavButton="{= !${device>/system/desktop} }" navButtonPress=".onPressDetailBack">
-                <Label text="Detail page 1" class="sapUiTinyMarginEnd" />
-                <Button text="Go to Detail page 2" press=".onPressNavToDetail" />
+            <!-- Start Detail View -->
+            <Page id="idSelectEmployeePage" showHeader="false">
+                <FlexBox id="idSelectEmployeeFlexBox" alignItems="Center" justifyContent="Center" height="100%">
+                    <Text id="idSelectAnEmployeeText" class="bold" text="{i18n>selectEmployee}"/>
+                </FlexBox>
+            </Page>
+
+            <!-- Employee Details -->
+            <Page id="idDetailsPage" title="{i18n>employeeDetail}" titleAlignment="Center">
+
+                <ObjectHeader id="idDetailsObjectHeader" class="sapUiResponsivePadding--header" 
+                    responsive="true"
+					icon= "{= 
+                        ${zEmployeesModel>Type}==='0' ? 'sap-icon://employee-pane' : 
+                        ${zEmployeesModel>Type}==='1' ? 'sap-icon://employee' : 'sap-icon://leads' 
+                    }"
+					title="{zEmployeesModel>FirstName} {zEmployeesModel>LastName}"
+					intro="{zEmployeesModel>Dni}"
+				>
+                    <ObjectAttribute id="idCreationDateObjectAttribute" title="{i18n>incorporationDate}" 
+                        text="{ 
+                            path:'zEmployeesModel>CreationDate', 
+                            type:'sap.ui.model.type.Date'
+                        }" 
+                    />
+                    <ObjectAttribute id="idEmployeeTypeObjectAttribute" title="{i18n>type}"
+                        text="{= ${zEmployeesModel>Type} === '0' ? ${i18n>internal} : ${zEmployeesModel>Type} === '1' ? ${i18n>autonomous} : ${i18n>manager}}"
+                    />
+                    <ObjectAttribute id="idCommentsObjectAttribute"
+                        title="{i18n>comments}" 
+                        text="{zEmployeesModel>Comments}"
+                    />
+                    <ObjectAttribute id="idSapIdObjectAttribute"
+                        title="{i18n>sapId}" 
+                        text="{zEmployeesModel>SapId}"
+                    />
+				</ObjectHeader>
+
+                <!-- IconTabBar -->
+                <IconTabBar id="idIconTabBar" class="sapUiResponsiveContentPadding">
+                    <items>
+                        <IconTabFilter id="idFilesIconTabFilter"
+                            design="Horizontal"
+                            icon="sap-icon://attachment"
+                            text="{i18n>files}"
+                        >
+                            <upload:UploadSet id="idDetailsUploadSet"
+                                uploadUrl="/sap/opu/odata/sap/ZEMPLOYEES_SRV/Attachments"
+                                beforeUploadStarts="onUploadSetBeforeUploadStarts"
+                                uploadCompleted="onUploadSetUploadCompleted"
+                                afterItemRemoved="onUploadSetAfterItemRemoved"
+                                beforeItemAdded="onUploadSetBeforeItemAdded"
+                                mode="None"
+                                busy="true"
+                                multiple="true"
+                            >
+                                <upload:toolbar>
+                                    <OverflowToolbar id="idDetailsUploadOverflowToolbar">
+                                        <Label id="idDetailsAnnexLabel" text="{i18n>attachments} ({employeeModel>/totalFiles})"/>
+                                        <ToolbarSpacer id="idDetailsUploadToolbarSpacer"/>
+                                    </OverflowToolbar>
+                                </upload:toolbar>
+
+                            </upload:UploadSet>
+                        </IconTabFilter>
+
+                        <IconTabFilter id="idHistoryIconTabFilter" icon="sap-icon://money-bills" design="Horizontal" text="{i18n>history}">
+                            <commons:Timeline id="idUserToSalaryTimeline" 
+                                content="{zEmployeesModel>UserToSalary}"
+                                groupBy="CreationDate" 
+                                groupByType="Year" 
+                                sortOldestFirst="true" 
+                                enableDoubleSided="true" 
+                                showHeaderBar="false" 
+                                enableScroll="false" 
+                            >
+                                <commons:content>
+                                    <commons:TimelineItem id="idCommentsTimelineItem" 
+                                        userName="{
+                                            parts:[
+                                                {path:'zEmployeesModel>Amount'},
+                                                {path:'zEmployeesModel>Waers'}
+                                            ],
+                                            type: 'sap.ui.model.type.Currency',
+                                            formatOptions: {showMeasure: false}
+                                        }" 
+                                        text="{zEmployeesModel>Comments}" 
+                                        dateTime="{zEmployeesModel>CreationDate}"
+                                        icon="sap-icon://circle-task"
+                                    >
+                                    </commons:TimelineItem>
+                                </commons:content>
+                            </commons:Timeline>
+                        </IconTabFilter>
+                    </items>
+                </IconTabBar>
+
+                <footer>
+                    <OverflowToolbar id="idFDetailsOverflowToolbar">
+                        <ToolbarSpacer id="idDetailsToolbarSpacer"/>
+                        <Button id="idRemoveUserButton" text="{i18n>removeUser}" press="onRemoveUserButtonPress"/>
+                        <Button id="idNewRiseButton" text="{i18n>newRise}" type="Emphasized" press="onNewRiseButtonPress"/>
+                    </OverflowToolbar>
+                </footer>
             </Page>
         </detailPages>
-    </SplitContainer>
+    </SplitApp>
 </mvc:View>

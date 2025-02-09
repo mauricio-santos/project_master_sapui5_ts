@@ -135,18 +135,17 @@ export default class Utils {
     };
 
     private async delete(model: JSONModel): Promise<void | ODataListBinding | null> {
-        let url = model.getProperty("/url");
-        // const i18n = this.resourceBundle;
-        const _this = this;
+        const url = model.getProperty("/url");
+        const i18n = this.resourceBundle;
 
         return new Promise((resolve, reject) => {
             this.model.remove(url, {
                 success: async function() {
-                    // MessageBox.success(i18n.getText("successDelete") || "no text defined");
-                    resolve(await _this.read(model));
+                    MessageBox.success(i18n.getText("successDelete") || "no text defined");       
+                    resolve();
                 },
                 error: function() {
-                    // MessageBox.error(i18n.getText("errorDelete") || "no text defined");
+                    MessageBox.error(i18n.getText("errorDelete") || "no text defined");
                     reject();
                 }
             });

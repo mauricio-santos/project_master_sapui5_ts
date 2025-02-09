@@ -135,17 +135,20 @@
             "targets": {
                 "TargetHome": {
                     "id": "Home",
-                    "name": "Home"
+                    "name": "Home",
+                    "transition": "flip"
                 },
                 "TargetCreateEmployees": {
                     "id": "CreateEmployees",
                     "name": "CreateEmployees",
-                    "viewType": "XML"
+                    "viewType": "XML",
+                    "transition": "flip"
                 },
                 "TargetMasterDetailsEmployees": {
                     "id": "MasterDetails",
                     "name": "MasterDetails",
-                    "viewType": "XML"
+                    "viewType": "XML",
+                    "transition": "flip"
                 }
             }
         },

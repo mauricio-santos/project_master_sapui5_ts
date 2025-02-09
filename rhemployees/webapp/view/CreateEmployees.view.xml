@@ -10,7 +10,11 @@
             <pages>
 
                 <Page id="idWizardPage" showHeader="false">
-                    <Wizard id="idWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content" finishButtonText="{i18n>review}" complete="onWizardComplete" navigationChange="onValidationEdit">
+                    <Wizard id="idWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content" 
+                        finishButtonText="{i18n>review}" 
+                        complete="onWizardComplete" 
+                        navigationChange="onValidationEdit"
+                    >
                         <!-- Step 1 -->
                         <WizardStep id="idTypeEmployeeWizardStep" title="{i18n>employeeType}" validated="false">
                             <!-- MessageStrip Step 1 -->
