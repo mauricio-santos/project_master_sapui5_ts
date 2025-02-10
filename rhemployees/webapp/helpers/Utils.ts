@@ -29,37 +29,9 @@ export default class Utils {
     public async crud(action: string, model: JSONModel, signature = false): Promise<void | ODataListBinding | null> {
         const _this = this;
         
-        // const resourceBundle = this.resourceBundle;
-        // const data = model.getProperty("/data");
-        // let filters = [];
-
-        // !signature
-        //     ? filters.push(new Filter("EmployeeId", FilterOperator.EQ, data.EmployeeId))
-        //     : filters.push(new Filter("OrderId", FilterOperator.EQ, data.OrderId));
-
-        // filters.push(new Filter("SapId", FilterOperator.EQ, data.SapId));
-        // model.setProperty("/filters", filters);
-
-        // return new Promise((resolve, reject) => {
-        //     MessageBox.confirm(resourceBundle.getText("question") || "no text defined", {
-        //         actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
-        //         emphasizedAction: MessageBox.Action.OK,
-        //         onClose: async function(selectedAction: string) {
-        //             if (selectedAction === MessageBox.Action.OK){
-        //                 switch(action) {
-        //                     case 'create': resolve(await _this.create(model)); break;
-        //                     case 'update': resolve(await _this.update(model)); break;
-        //                     case 'delete': resolve(await _this.delete(model)); break;
-        //                 }
-        //             }
-        //         }
-        //     });
-        // });
-        
         return new Promise(async (resolve, reject) => {
             switch (action) {
                 case 'create': resolve(await _this.create(model)); break;
-                // case 'update': resolve(await _this.update(model)); break;
                 case 'delete': resolve(await _this.delete(model)); break;
                 default: reject(new Error("Invalid action"));
             }
@@ -76,12 +48,12 @@ export default class Utils {
                 success: async function(result: any) {
                     // MessageBox.success(i18n.getText("success") || "no text defined");
                     // resolve(await _this.read(model));    
-                    console.log("------- CREATED --------");
+                    // console.log("------- CREATED --------");
                     resolve(result);               
                 },
                 error: function(e: any) {
                     MessageBox.error(i18n.getText("error") || "no text defined");
-                    console.log("------- NOT CREATED --------");
+                    // console.log("------- NOT CREATED --------");
                     resolve(e);
                     
                 }
@@ -109,26 +81,6 @@ export default class Utils {
                         // Outros erros (problemas no servidor, falha de conexão, etc.)
                         reject(error);
                     }
-                }
-            });
-        });
-    };
-
-    private async update(model: JSONModel): Promise<void | ODataListBinding> {
-        const url = model.getProperty("/url");
-        const data = model.getProperty("/data");
-        const i18n = this.resourceBundle;
-        const _this = this;
-
-        return new Promise((resolve, reject) => {
-            this.model.update(url, data, {
-                success: async function() {
-                    MessageBox.success(i18n.getText("successUpdate") || "no text defined");
-                    resolve(await _this.read(model));
-                },
-                error: function(e: any) {
-                    MessageBox.error(i18n.getText("errorUpdate") || "no text defined");
-                    console.log(e);
                 }
             });
         });

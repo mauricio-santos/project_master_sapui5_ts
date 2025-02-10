@@ -1,4 +1,5 @@
 import BaseControllers from "../helpers/BaseControllers";
+import { URLHelper } from "sap/m/library";
 
 /**
  * @namespace de.santos.rhemployees.controller
@@ -19,6 +20,7 @@ export default class Home extends BaseControllers {
     };
 
     public onSignOrderGenericTilePress(): void {
-
+        const url = "https://mosolf-se---co--kg-mosolf-fzeq-dev-employees-ts-approuter.cfapps.eu10-004.hana.ondemand.com/desantosemployees/index.html";
+		URLHelper.redirect(url);
     };
 };
