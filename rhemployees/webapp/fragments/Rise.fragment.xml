@@ -29,7 +29,7 @@
                         <f:formElements>
                             <f:FormElement id="idFormElement" label="{i18n>salary}">
                                 <f:fields>
-                                    <Input id="idAmountInput" value="{employeeModel>/Amount}"/>
+                                    <Input id="idAmountInput" value="{employeeModel>/Amount}" type="Number"/>
                                 </f:fields>
                             </f:FormElement>
                             <f:FormElement id="idDateFormElement" label="{i18n>date}">

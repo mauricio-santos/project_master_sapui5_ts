@@ -1,6 +1,6 @@
 _schema-version: "3.2"
 ID: project_master_final
-version: 0.0.1
+version: 0.0.5
 modules:
 - name: project-master-final-approuter
   type: approuter.nodejs
@@ -24,6 +24,23 @@ modules:
   - name: project_master_final_html_repo_host
     parameters:
       content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - desantosrhemployees.zip
+      name: desantosrhemployees
+      target-path: resources/
+- name: desantosrhemployees
+  type: html5
+  path: rhemployees
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
 resources:
 - name: project_master_final_html_repo_runtime
   type: org.cloudfoundry.managed-service
@@ -60,3 +77,6 @@ resources:
     service: destination
     service-name: project_master_final-destination-service
     service-plan: lite
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true

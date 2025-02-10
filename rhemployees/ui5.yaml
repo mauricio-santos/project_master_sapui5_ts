@@ -19,7 +19,7 @@ server:
           - scp: true
             path: /sap
             url: http://erp13.sap4practice.com:9037
-            destination: logaligroupERP_CLONING
+            destination: logaligroupERP
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:

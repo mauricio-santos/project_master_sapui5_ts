@@ -32,14 +32,18 @@
         <!-- DETAIL VIEW -->
         <detailPages>
             <!-- Start Detail View -->
-            <Page id="idSelectEmployeePage" showHeader="false">
+            <Page id="idSelectEmployeePage" showHeader="false" visible="{= !${deviceModel>/system/phone}}">
                 <FlexBox id="idSelectEmployeeFlexBox" alignItems="Center" justifyContent="Center" height="100%">
                     <Text id="idSelectAnEmployeeText" class="bold" text="{i18n>selectEmployee}"/>
                 </FlexBox>
             </Page>
 
             <!-- Employee Details -->
-            <Page id="idDetailsPage" title="{i18n>employeeDetail}" titleAlignment="Center">
+            <Page id="idDetailsPage" title="{i18n>employeeDetail}" 
+                titleAlignment="Center" 
+                showNavButton="true" 
+                navButtonPress="onDetailsPageNavButtonPress"
+            >
 
                 <ObjectHeader id="idDetailsObjectHeader" class="sapUiResponsivePadding--header" 
                     responsive="true"
@@ -78,7 +82,7 @@
                             text="{i18n>files}"
                         >
                             <upload:UploadSet id="idDetailsUploadSet"
-                                uploadUrl="/sap/opu/odata/sap/ZEMPLOYEES_SRV/Attachments"
+                                uploadUrl="/desantosrhemployees/sap/opu/odata/sap/ZEMPLOYEES_SRV/Attachments"
                                 beforeUploadStarts="onUploadSetBeforeUploadStarts"
                                 uploadCompleted="onUploadSetUploadCompleted"
                                 afterItemRemoved="onUploadSetAfterItemRemoved"
@@ -131,8 +135,8 @@
                 <footer>
                     <OverflowToolbar id="idFDetailsOverflowToolbar">
                         <ToolbarSpacer id="idDetailsToolbarSpacer"/>
-                        <Button id="idRemoveUserButton" text="{i18n>removeUser}" press="onRemoveUserButtonPress"/>
                         <Button id="idNewRiseButton" text="{i18n>newRise}" type="Emphasized" press="onNewRiseButtonPress"/>
+                        <Button id="idRemoveUserButton" text="{i18n>removeUser}" type="Attention" press="onRemoveUserButtonPress"/>
                     </OverflowToolbar>
                 </footer>
             </Page>

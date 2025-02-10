@@ -25,19 +25,19 @@
                             <!-- Employee Type Buttons -->
                             <FlexBox id="idEmployeeTypeFlexBox" alignItems="Center" justifyContent="Center">
                                 <!-- Internal -->
-                                <Button id="idInternalButton" class="sapUiMediumMarginBegin" 
+                                <Button id="idInternalButton" class="sapUiSmallMarginEnd" 
                                     width="100px"
                                     text="{i18n>internal}"
                                     press="onTypeEmployeeButtonPress"
                                 />
                                 <!-- Autonomous -->
-                                <Button id="idAutonomousButton" class="sapUiMediumMarginBegin" 
+                                <Button id="idAutonomousButton" class="sapUiSmallMarginEnd" 
                                     width="100px"
                                     text="{i18n>autonomous}"
                                     press="onTypeEmployeeButtonPress"
                                 />
                                 <!-- Manager -->
-                                <Button id="idManagerButton" class="sapUiMediumMarginBegin" 
+                                <Button id="idManagerButton"
                                     width="100px"
                                     text="{i18n>manager}"
                                     press="onTypeEmployeeButtonPress"
@@ -149,7 +149,7 @@
                             />
 
                             <upload:UploadSet id="idUploadSet"
-                                uploadUrl="/sap/opu/odata/sap/ZEMPLOYEES_SRV/Attachments"
+                                uploadUrl="/desantosrhemployees/sap/opu/odata/sap/ZEMPLOYEES_SRV/Attachments"
                                 beforeUploadStarts="onUploadSetBeforeUploadStarts"
                                 uploadCompleted="onUploadSetUploadCompleted"
                                 afterItemRemoved="onUploadSetAfterItemRemoved"

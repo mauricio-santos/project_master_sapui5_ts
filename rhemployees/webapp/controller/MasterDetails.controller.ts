@@ -17,6 +17,7 @@ import ODataModel from "sap/ui/model/odata/ODataModel";
 import Utils from "../helpers/Utils";
 import Button, { Button$PressEvent } from "sap/m/Button";
 import Dialog from "sap/m/Dialog";
+import Device from "sap/ui/Device";
 
 /**
  * @namespace de.santos.rhemployee.controller
@@ -98,7 +99,7 @@ export default class MasterDetails extends BaseControllers {
                 url: { //Download URL
                     path: "zEmployeesModel>__metadata/media_src", // Full URL for media_src
                     formatter: function (mediaSrc: string) {
-                        return mediaSrc ? mediaSrc.replace(/^https?:\/\/[^/]+/, "") : "";
+                        return mediaSrc ? "/desantosrhemployees" + mediaSrc.replace(/^https?:\/\/[^/]+/, "") : "";
                     }
                 }
             })
@@ -186,6 +187,7 @@ export default class MasterDetails extends BaseControllers {
         const url = `/Users(EmployeeId='${EmployeeId}',SapId='${sapId}')`
         const i18n = this.getResourceBundleHelper();
         const zEmployeesModel = this.getModelHelper("zEmployeesModel") as ODataModel
+        const phone = Device.system.phone
 
          MessageBox.confirm(i18n.getText("msgFormCancel") || "no text defined", {
             actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
@@ -197,7 +199,7 @@ export default class MasterDetails extends BaseControllers {
 
                     await utils.crud("delete", new JSONModel({url}));
                     zEmployeesModel.refresh(true);
-                    splitApp.toDetail(detailsPage.getId(), "fade");
+                    phone ? splitApp.backToTopMaster() : splitApp.toDetail(detailsPage.getId(), "fade");
                 }
             }, 
         });
@@ -205,19 +207,6 @@ export default class MasterDetails extends BaseControllers {
 
     // ############## RISE FRAGMENT ##############
     public async onNewRiseButtonPress(): Promise<void> {
-        const i18n = this.getResourceBundleHelper();
-        const splitApp = this.byId("idSplitApp") as SplitApp;
-        const detailsPage = this.byId("idSelectEmployeePage") as Page
-
-        // MessageBox.confirm(i18n.getText("msgFormCancel") || "no text defined", {
-        //     actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
-        //     emphasizedAction: MessageBox.Action.OK,
-        //     onClose: () => {
-        //         this.getRouterHelper().navTo("RouteHome");
-        //         splitApp.toDetail(detailsPage.getId(), "fade");
-        //     }
-        // });
-
         this.dialog ??= (<Dialog>await this.loadFragment({
             name: "de.santos.rhemployees.fragments.Rise"
         }));
@@ -250,5 +239,16 @@ export default class MasterDetails extends BaseControllers {
     public onCancelButtonPress(): void {
         this.dialog.close();
     }
+
+    public onDetailsPageNavButtonPress(): void {
+        const splitApp = this.byId("idSplitApp") as SplitApp;
+        const pageDetailsSelect = this.byId("idSelectEmployeePage") as Page;
+
+        splitApp.backToTopMaster();
+
+        Device.system.phone
+         ? splitApp.backToTopMaster() 
+         : splitApp.toDetail(pageDetailsSelect.getId(), "fade");
+    };
 
 };
